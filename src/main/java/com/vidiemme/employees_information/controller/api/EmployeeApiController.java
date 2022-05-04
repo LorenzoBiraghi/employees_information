@@ -1,6 +1,8 @@
 package com.vidiemme.employees_information.controller.api;
 
 import com.vidiemme.employees_information.entity.Employee;
+import com.vidiemme.employees_information.entity.dto.EmployDto;
+import com.vidiemme.employees_information.entity.dto.EmployeeUsernamePassword;
 import com.vidiemme.employees_information.service.api.EmployeeApiService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -71,7 +73,7 @@ public class EmployeeApiController {
      */
     @ApiResponse(description = "save employee",responseCode = "200", content = @Content(schema = @Schema(implementation = Employee.class)))
     @PostMapping("/")
-    public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody Employee employee){
+    public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody EmployDto employee){
         return ResponseEntity.ok(employeeApiService.save(employee));
     }
 
@@ -83,7 +85,7 @@ public class EmployeeApiController {
      */
     @ApiResponse(description = "update employee by id",responseCode = "200", content = @Content(schema = @Schema(implementation = Employee.class)))
     @PutMapping("/id/{id}")
-    public ResponseEntity<Employee> updateEmployeeById(@Valid @RequestBody Employee employee, @PathVariable Long id){
+    public ResponseEntity<Employee> updateEmployeeById(@RequestBody Employee employee, @PathVariable Long id){
         Employee employeeupdated = employeeApiService.updateById(employee, id);
         if (employeeupdated != null){
             return ResponseEntity.ok(employeeupdated);
@@ -103,6 +105,24 @@ public class EmployeeApiController {
     @PutMapping("/username/{username}")
     public ResponseEntity<Employee> updateEmployeeByusername(@Valid @RequestBody Employee employee, @PathVariable String username){
         Employee employeeupdated = employeeApiService.updateByUsername(employee, username);
+        if (employeeupdated != null){
+            return ResponseEntity.ok(employeeupdated);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Update password of employee by his username
+     * @param employee Object based by username and password
+     * @param username
+     * @return Employee object updated
+     */
+    @ApiResponse(description = "update password by username",responseCode = "200", content = @Content(schema = @Schema(implementation = Employee.class)))
+    @PutMapping("/setPassword/{username}")
+    public ResponseEntity<Employee> updateEmployeePasswordByusername(@RequestBody EmployeeUsernamePassword employee, @PathVariable String username){
+        Employee employeeupdated = employeeApiService.updatePasswordByUsername(employee, username);
         if (employeeupdated != null){
             return ResponseEntity.ok(employeeupdated);
         }

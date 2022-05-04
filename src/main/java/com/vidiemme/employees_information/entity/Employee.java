@@ -1,5 +1,6 @@
 package com.vidiemme.employees_information.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class Employee {
 
     @NotNull
     @NotBlank(message = "empty")
-    public String fistname;
+    public String firstname;
 
     @NotNull
     @NotBlank(message = "empty")
@@ -44,6 +45,7 @@ public class Employee {
 
     @NotNull
     @NotBlank(message = "empty")
+    @JsonIgnore
     public String password;
 
     @ManyToMany

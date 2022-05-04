@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ApiError {
 
@@ -18,7 +19,7 @@ public class ApiError {
 
     @Getter
     @Setter
-    private HashMap<String, Object> errors;
+    private Map<String, Object> errors;
 
     /**
      * Constructor
@@ -26,7 +27,7 @@ public class ApiError {
      * @param message
      * @param errors
      */
-    public ApiError(HttpStatus httpStatus, String message, HashMap<String, Object> errors) {
+    public ApiError(HttpStatus httpStatus, String message, Map<String, Object> errors) {
         super();
         this.httpStatus = httpStatus;
         this.message = message;
@@ -43,8 +44,8 @@ public class ApiError {
         super();
         this.httpStatus = httpStatus;
         this.message = message;
-        HashMap<String, Object> errors = new HashMap<String, Object>();
-        errors.put("GENERIC", error);
-        this.errors = errors;
+        Map<String, Object> errors2 = new HashMap<>();
+        errors2.put("GENERIC", error);
+        this.errors = errors2;
     }
 }

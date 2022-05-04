@@ -1,19 +1,34 @@
 package com.vidiemme.employees_information.service.api;
 
 import com.vidiemme.employees_information.entity.Employee;
+import com.vidiemme.employees_information.entity.dto.EmployDto;
+import com.vidiemme.employees_information.entity.dto.EmployeeUsernamePassword;
 import com.vidiemme.employees_information.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeApiService {
+@Slf4j
+@Transactional
+@RequiredArgsConstructor
+public class EmployeeApiService implements UserDetailsService {
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     EmployeeRepository employeeRepository;
-    PasswordEncoder passwordEncoder;
 
 
     /**
@@ -59,10 +74,13 @@ public class EmployeeApiService {
      * @param employee
      * @return Employee object saved
      */
-    public Employee save(Employee employee){
-        employee.setPassword(passwordEncoder.encode(employee.password));
-        employeeRepository.save(employee);
-        return employee;
+    public Employee save(EmployDto employee){
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        Employee employee1 = new Employee(employee.getId(), employee.getFirstname(),
+                employee.getLastname(), employee.getEmail(), employee.getPhone(),
+                employee.getBirthDate(), employee.getUsername(), employee.getPassword(), employee.getRoles());
+        employeeRepository.save(employee1);
+        return employee1;
     }
 
     /**
@@ -97,6 +115,26 @@ public class EmployeeApiService {
         else{
             employeeRepository.save(employee);
             return employee;
+        }
+    }
+
+    /**
+     * Update password of employee by his username
+     * @param employee Object based by username and password
+     * @param username
+     * @return Employee object updated
+     */
+    public Employee updatePasswordByUsername(EmployeeUsernamePassword employee, String username){
+        Optional<Employee> employeeOptional = employeeRepository.findByUsername(username);
+        if(employeeOptional.isEmpty()){
+            return null;
+        }
+        else{
+            EmployDto employDto = new EmployDto();
+            employDto.setUsername(employee.getUsername());
+            employDto.setPassword(employee.getPassword());
+            save(employDto);
+            return employeeOptional.get();
         }
     }
 
@@ -136,6 +174,25 @@ public class EmployeeApiService {
         else{
             employeeRepository.deleteByUsername(username);
             return true;
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Employee> employee = employeeRepository.findByUsername(username);
+        if(employee.isEmpty()){
+            String message = "Employee non found with username: " + username;
+            log.error(message);
+            throw new UsernameNotFoundException(message);
+        }
+        else{
+            log.debug("Employee found in the database: {}", username);
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            employee.get().roles.stream().forEach(role ->
+                    authorities.add(new SimpleGrantedAuthority(role.getName())));
+            return new org.springframework.security.core.userdetails.User(employee.get().username, employee.get().password, authorities);
+
+
         }
     }
 }
