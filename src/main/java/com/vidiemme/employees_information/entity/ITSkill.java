@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ITSkills {
+public class ITSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
