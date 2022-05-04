@@ -1,4 +1,4 @@
-package com.vidiemme.employees_information.service;
+package com.vidiemme.employees_information.service.api;
 
 import com.vidiemme.employees_information.entity.Employee;
 import com.vidiemme.employees_information.repository.EmployeeRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeService {
+public class EmployeeApiService {
     @Autowired
     EmployeeRepository employeeRepository;
     PasswordEncoder passwordEncoder;

@@ -12,5 +12,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      * @return Employee object
      */
     public Optional<Employee> findByUsername(String username);
+    /**
+     * Delete employee by his username
+     * @param username
+     */
     public void deleteByUsername(String username);
 }
