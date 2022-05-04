@@ -32,9 +32,11 @@ public class Employee {
     @Email
     public String email;
 
+    @Column
     public String phone;
 
-    public Date birth_date;
+    @Column(name = "birth_date")
+    public Date birthDate;
 
     @NotNull
     @NotBlank(message = "empty")

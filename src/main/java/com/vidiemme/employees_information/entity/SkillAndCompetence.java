@@ -16,7 +16,9 @@ public class SkillAndCompetence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column
     public String typology;
 
+    @Column
     public String description;
 }

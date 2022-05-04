@@ -17,15 +17,21 @@ public class EducationAndTraining {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column
     public String level;
 
-    public String school_name;
+    @Column(name = "school_name")
+    public String schoolName;
 
+    @Column
     public String city;
 
-    public String final_grade;
+    @Column(name = "final_grade")
+    public String finalGrade;
 
-    public Year start_year;
+    @Column(name = "start_year")
+    public Year startYear;
 
-    public Year finish_year;
+    @Column(name = "finish_year")
+    public Year finishYear;
 }

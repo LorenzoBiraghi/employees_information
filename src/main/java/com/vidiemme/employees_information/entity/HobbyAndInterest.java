@@ -16,5 +16,6 @@ public class HobbyAndInterest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column
     public String description;
 }

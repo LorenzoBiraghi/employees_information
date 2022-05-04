@@ -16,9 +16,12 @@ public class ITSkills {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column
     public String technology;
 
-    public String self_evaluation;
+    @Column(name = "self_evaluation")
+    public String selfEvaluation;
 
+    @Column
     public String description;
 }

@@ -10,15 +10,21 @@ public class WorkExperience {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column
     public String agency;
 
+    @Column
     public String sector;
 
+    @Column
     public String position;
 
+    @Column
     public String description;
 
-    public Year start_year;
+    @Column(name = "start_year")
+    public Year startYear;
 
-    public Year finish_year;
+    @Column(name = "finish_year")
+    public Year finishYear;
 }

@@ -16,13 +16,18 @@ public class LanguageSkill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column
     public String language;
 
-    public String writing_comprehension;
+    @Column(name = "writing_comprehension")
+    public String writingComprehension;
 
-    public String listening_comprehension;
+    @Column(name = "listening_comprehension")
+    public String listeningComprehension;
 
-    public String writing_exposure;
+    @Column(name = "writing_exposure")
+    public String writingExposure;
 
-    public String listening_exposure;
+    @Column(name = "listening_exposure")
+    public String listeningExposure;
 }
