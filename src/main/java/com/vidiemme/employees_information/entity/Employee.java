@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -42,4 +43,10 @@ public class Employee {
     @NotNull
     @NotBlank(message = "empty")
     public String password;
+
+    @ManyToMany
+    @JoinTable(name = "employees_roles",joinColumns =
+        @JoinColumn(name = "employee_id", referencedColumnName = "id"), inverseJoinColumns =
+        @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    public List<Role> roles;
 }
