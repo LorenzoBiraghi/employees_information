@@ -22,7 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static final String API_EMPLOYEES = "/api/employees/**";
-    private static final String ADMIN_ROLE = "ADMIN";
+    private static final String MODIFY_ALL = "MODIFY_ALL";
+    private static final String READ_ALL = "READ_ALL";
+
     @Autowired
     UserDetailsService userDetailsService;
 
@@ -37,11 +39,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/login/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, API_EMPLOYEES).hasAuthority(ADMIN_ROLE)
+                .authorizeRequests().antMatchers(HttpMethod.POST, API_EMPLOYEES).hasAuthority(MODIFY_ALL)
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.GET, API_EMPLOYEES).hasAuthority(ADMIN_ROLE)
+                .authorizeRequests().antMatchers(HttpMethod.GET, API_EMPLOYEES).hasAuthority(READ_ALL)
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.PUT, API_EMPLOYEES).hasAuthority(ADMIN_ROLE)
+                .authorizeRequests().antMatchers(HttpMethod.PUT, API_EMPLOYEES).hasAuthority(MODIFY_ALL)
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, API_EMPLOYEES).hasAuthority(MODIFY_ALL)
                 .and()
                 .authorizeRequests().anyRequest().permitAll()
                 .and()

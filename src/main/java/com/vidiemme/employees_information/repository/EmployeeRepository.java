@@ -9,7 +9,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     /**
      * Find employee by his username
      * @param username
-     * @return Employee object
+     * @return Optional Employee object
      */
     public Optional<Employee> findByUsername(String username);
     /**

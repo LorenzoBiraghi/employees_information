@@ -1,6 +1,7 @@
 package com.vidiemme.employees_information.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vidiemme.employees_information.entity.dto.EmployeeDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +23,10 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @NotNull
-    @NotBlank(message = "empty")
+    @Column
     public String firstname;
 
-    @NotNull
-    @NotBlank(message = "empty")
+    @Column
     public String lastname;
 
     @Email
@@ -43,8 +42,6 @@ public class Employee {
     @NotBlank(message = "empty")
     public String username;
 
-    @NotNull
-    @NotBlank(message = "empty")
     @JsonIgnore
     public String password;
 
@@ -53,4 +50,17 @@ public class Employee {
         @JoinColumn(name = "employee_id", referencedColumnName = "id"), inverseJoinColumns =
         @JoinColumn(name = "role_id", referencedColumnName = "id"))
     public List<Role> roles;
+
+
+    public Employee(EmployeeDto employeeDto){
+        this.id = employeeDto.getId();
+        this.username = employeeDto.getUsername();
+        this.password = employeeDto.getPassword();
+        this.birthDate = employeeDto.getBirthDate();
+        this.roles = employeeDto.getRoles();
+        this.email = employeeDto.getEmail();
+        this.firstname = employeeDto.getFirstname();
+        this.lastname = employeeDto.getLastname();
+        this.phone = employeeDto.getPhone();
+    }
 }

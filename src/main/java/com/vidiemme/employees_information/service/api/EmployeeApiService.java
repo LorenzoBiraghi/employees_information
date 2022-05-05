@@ -1,9 +1,11 @@
 package com.vidiemme.employees_information.service.api;
 
 import com.vidiemme.employees_information.entity.Employee;
-import com.vidiemme.employees_information.entity.dto.EmployDto;
+import com.vidiemme.employees_information.entity.Role;
+import com.vidiemme.employees_information.entity.dto.EmployeeDto;
 import com.vidiemme.employees_information.entity.dto.EmployeeUsernamePassword;
 import com.vidiemme.employees_information.repository.EmployeeRepository;
+import com.vidiemme.employees_information.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class EmployeeApiService implements UserDetailsService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
 
     /**
@@ -74,13 +78,36 @@ public class EmployeeApiService implements UserDetailsService {
      * @param employee
      * @return Employee object saved
      */
-    public Employee save(EmployDto employee){
+    public Employee save(EmployeeDto employee){
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        Employee employee1 = new Employee(employee.getId(), employee.getFirstname(),
-                employee.getLastname(), employee.getEmail(), employee.getPhone(),
-                employee.getBirthDate(), employee.getUsername(), employee.getPassword(), employee.getRoles());
+        Employee employee1 = new Employee(employee);
         employeeRepository.save(employee1);
         return employee1;
+    }
+
+    /**
+     * Add Role To User by his username
+     * @param username
+     * @param rolename
+     * @return Employee object updated
+     */
+    public Employee addRole(String username, String rolename){
+        Optional<Employee> employee = employeeRepository.findByUsername(username);
+        if(employee.isEmpty()){
+            return null;
+        }
+        else{
+            Optional<Role> role = roleRepository.findByName(rolename);
+            if(role.isEmpty()){
+                return null;
+            }
+            else {
+                employee.get().getRoles().add(role.get());
+                employeeRepository.save(employee.get());
+                return employee.get();
+            }
+
+        }
     }
 
     /**
@@ -130,10 +157,9 @@ public class EmployeeApiService implements UserDetailsService {
             return null;
         }
         else{
-            EmployDto employDto = new EmployDto();
-            employDto.setUsername(employee.getUsername());
-            employDto.setPassword(employee.getPassword());
-            save(employDto);
+            employeeOptional.get().setPassword(employee.getPassword());
+            EmployeeDto employeeDto = new EmployeeDto(employeeOptional.get());
+            save(employeeDto);
             return employeeOptional.get();
         }
     }
@@ -189,7 +215,9 @@ public class EmployeeApiService implements UserDetailsService {
             log.debug("Employee found in the database: {}", username);
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             employee.get().roles.stream().forEach(role ->
-                    authorities.add(new SimpleGrantedAuthority(role.getName())));
+                    role.getAuthorities().stream().forEach(authority ->
+                            authorities.add(new SimpleGrantedAuthority(authority.getName()))));
+
             return new org.springframework.security.core.userdetails.User(employee.get().username, employee.get().password, authorities);
 
 
